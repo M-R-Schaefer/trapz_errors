@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "trapz-errors"
+name = "trapz_errors"
 version = "0.1.0"
 description = "A tool to analyse errors associated with applying the Trapezoidal rule to uncertain data."
 authors = ["Moritz R. Schäfer <schaefer@theochem.uni-stuttgart.de>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "trapz_errors"}]
+packages = [{include = "integration_errors"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"

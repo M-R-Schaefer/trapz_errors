@@ -2,9 +2,7 @@ import numpy as np
 from scipy.integrate import trapz
 from scipy import interpolate
 import os
-if not os.environ.has_key("DISPLAY"):
-    import matplotlib
-    matplotlib.use("Agg")
+if not "DISPLAY" in os.environ:
     CAN_SHOW_PLOT = False
 else:
     CAN_SHOW_PLOT = True
@@ -25,12 +23,12 @@ def integrate_with_point_uncertinaty(xs, ys, es):
 def run_test(xs, ys, es, x_fine=None, y_fine=None):
     if x_fine is not None:
         integral = trapz(y_fine, x_fine)
-        print "Integral: {0}".format(integral)
-        print "True truncation error: {0}".format(trapz(ys, xs) - integral)
+        print("Integral: {0}".format(integral))
+        print("True truncation error: {0}".format(trapz(ys, xs) - integral))
 
     trapz_integral, total_error, gap_xs, _, gap_errors, _, _ = trapz_integrate_with_uncertainty(xs, ys, es, be_conservative=True)
     #print "Truncation error estimate: {0} +/- {1}".format(trapz_integral, total_error - rss(integration_point_errors))
-    print "Combined error estimate: {0} +/- {1}".format(trapz_integral, total_error)
+    print("Combined error estimate: {0} +/- {1}".format(trapz_integral, total_error))
 
     plot_data(xs, ys, es, x_fine, y_fine,
         figure_name = None if CAN_SHOW_PLOT else "example_integration_{0}.eps".format(len(xs)),

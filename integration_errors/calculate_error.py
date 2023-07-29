@@ -4,8 +4,8 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from helpers import round_sigfigs, rss, calc_y_intersection_pt, second_derivative_with_uncertainty, parse_user_data
-from config import DEFAULT_FIGURE_NAME
+from trapz_errors.integration_errors.helpers import round_sigfigs, rss, calc_y_intersection_pt, second_derivative_with_uncertainty, parse_user_data
+from trapz_errors.integration_errors.config import DEFAULT_FIGURE_NAME
 
 DO_NOT_PLOT = "DO_NOT_PLOT"
 
@@ -125,7 +125,8 @@ def run(xs, ys, es, figure_name, sigfigs, verbose, be_conservative):
     integral, total_error, gap_xs, gap_ys, gap_errors, integration_point_errors, conservative_error_adjustment = \
         trapz_integrate_with_uncertainty(xs, ys, es, be_conservative=be_conservative)
 
-    round_sf = lambda x:round_sigfigs(x, sigfigs)
+    def round_sf(x):
+        return round_sigfigs(x, sigfigs)
     result_string = "{0:g} +/- {1:g}".format(round_sigfigs(integral, sigfigs + 2), round_sf(total_error))
     if verbose:
         value_error = round_sf(rss(integration_point_errors))

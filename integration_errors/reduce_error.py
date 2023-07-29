@@ -3,10 +3,10 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import CONVERGENCE_RATE_SCALING
-from calculate_error import config_argparse, process_plot_argument, parse_user_data, \
+from trapz_errors.integration_errors.config import CONVERGENCE_RATE_SCALING
+from trapz_errors.integration_errors.calculate_error import config_argparse, process_plot_argument, parse_user_data, \
     plot_error_analysis, trapz_integrate_with_uncertainty
-from helpers import round_sigfigs, rss
+from trapz_errors.integration_errors.helpers import round_sigfigs, rss
 
 def reduce_error_on_residual_error(error_pts, residule_error, convergence_rate_scaling, be_conservative):
     sorted_error_pts = sorted(error_pts, key=lambda x:abs(x[0]), reverse=True)
@@ -40,7 +40,8 @@ def get_updates(xs, integration_point_errors, gap_xs, gap_errors, trapz_est_erro
 
     largest_error_pts = reduce_error_on_residual_error(combined_pts_errors, residule_error, convergence_rate_scaling, be_conservative)
 
-    is_gap = lambda x:x[-1] == "gap"
+    def is_gap(x):
+        return x[-1] == "gap"
 
     # removed map
     update_xs = [e for e in largest_error_pts if not is_gap(e)]
@@ -64,7 +65,8 @@ def parse_args():
 def run(xs, ys, es, target_error, convergence_rate_scaling, be_conservative, figure_name, sigfigs, verbose):
     integral, total_error, gap_xs, gap_ys, gap_errors, integration_point_errors, conservative_error_adjustment = \
         trapz_integrate_with_uncertainty(xs, ys, es, be_conservative=be_conservative)
-    round_sf = lambda x:round_sigfigs(x, sigfigs)
+    def round_sf(x):
+        return round_sigfigs(x, sigfigs)
     result_string = "{0:g} +/- {1:g}".format(round_sf(integral), round_sf(total_error))
     if verbose:
         value_error = round_sf(rss(integration_point_errors))
