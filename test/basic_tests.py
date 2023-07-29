@@ -38,10 +38,11 @@ def run_test(xs, ys, es, x_fine=None, y_fine=None):
 def plot_data(xs, ys, es, x_fine=None, y_fine=None, figure_name=None, title=""):
     fig = plt.figure(figsize=(5,4))
     ax = fig.add_subplot(111)
-    fig.hold(True)
+    # fig.hold(True)
     f = interpolate.interp1d(xs, ys, kind=1)
     if x_fine is not None and y_fine is not None:
-        ax.fill_between(x_fine, y_fine, map(f, x_fine), facecolor='red', alpha=0.8)
+        # map(f, x_fine)
+        ax.fill_between(x_fine, y_fine, f(x_fine), facecolor='red', alpha=0.8)
         ax.plot(x_fine, y_fine, "r")
     ax.set_title("N={0}".format(len(xs)), fontweight="bold")
     ax.errorbar(xs, ys, es, marker="o", label="Integration Points")
@@ -78,10 +79,11 @@ def iterative_refinement_demonstration(data_file, target_error):
 
     xs = list(np.linspace(a, b, N))
     es = np.zeros(N)
-    ys = map(f, xs)
+    # ys = map(f, xs)
+    ys = f(xs)
 
     x_fine = np.linspace(a, b, N*100)
-    y_fine = map(f, x_fine)
+    y_fine = f(x_fine)
 
     generated_pts = [xs, ys, es]
     total_error = target_error + 1
@@ -90,10 +92,12 @@ def iterative_refinement_demonstration(data_file, target_error):
         gap_error_pts = zip(gap_errors, gap_xs, ["gap"]*len(gap_errors))
         largest_gap_error = reduce_error_on_residual_error(gap_error_pts, total_error-target_error, 0.5, False)
         if largest_gap_error:
-            largest_gap_errors_x = zip(*largest_gap_error)[1]
+            largest_gap_errors_x = list(zip(*largest_gap_error))[1]
         else:
             largest_gap_errors_x = []
-        generated_pts = zip(*sorted(zip(*generated_pts) + zip(largest_gap_errors_x, map(f, largest_gap_errors_x), list(np.zeros(len(largest_gap_errors_x))) )))
+        # Explicit zip to list conversion
+        inner = list(zip(*generated_pts)) + list(zip(largest_gap_errors_x, f(largest_gap_errors_x), list(np.zeros(len(largest_gap_errors_x))) ))
+        generated_pts = list(zip(*sorted(inner)))
 
 if __name__=="__main__":
     eg_data = "eg_data.dat"
