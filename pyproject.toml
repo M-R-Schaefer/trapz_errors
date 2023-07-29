@@ -18,6 +18,7 @@ scipy = "^1.11.1"
 ruff = "^0.0.280"
 pytest = "^7.4.0"
 coverage = "^7.2.7"
+click = "^8.1.6"
 
 [build-system]
 requires = ["poetry-core"]
