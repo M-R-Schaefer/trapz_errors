@@ -31,8 +31,9 @@ def reduce_error_on_residual_error(error_pts, residule_error, convergence_rate_s
 
 def get_updates(xs, integration_point_errors, gap_xs, gap_errors, trapz_est_error, target_uncertainty, convergence_rate_scaling, be_conservative=True):
     n_gaps = len(gap_xs)
-    gap_error_pts = zip(gap_errors, gap_xs, ["gap"]*n_gaps)
-    pts_errors = zip(integration_point_errors, xs)
+    # converted to list
+    gap_error_pts = list(zip(gap_errors, gap_xs, ["gap"]*n_gaps))
+    pts_errors = list(zip(integration_point_errors, xs))
 
     combined_pts_errors = gap_error_pts + pts_errors
     residule_error = abs(trapz_est_error) - target_uncertainty
@@ -41,8 +42,9 @@ def get_updates(xs, integration_point_errors, gap_xs, gap_errors, trapz_est_erro
 
     is_gap = lambda x:x[-1] == "gap"
 
-    update_xs = [map(float, e) for e in largest_error_pts if not is_gap(e)]
-    new_pts = [map(float, e[:-1]) for e in largest_error_pts if is_gap(e)]
+    # removed map
+    update_xs = [e for e in largest_error_pts if not is_gap(e)]
+    new_pts = [e[:-1] for e in largest_error_pts if is_gap(e)]
     return new_pts, update_xs
 
 def parse_args():

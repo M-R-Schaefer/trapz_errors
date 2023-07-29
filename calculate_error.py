@@ -29,7 +29,8 @@ def interval_errors(xs, ys, es, forward=True):
     Based on analytical Trapezoidal error function with 2nd derivative estimated numerically:
     https://en.wikipedia.org/wiki/Trapezoidal_rule#Error_analysis
     '''
-    pts = zip(xs, ys, es)
+    # pts = zip(xs, ys, es)
+    pts = np.array([xs, ys, es]).T
 
     gap_xs = [ (xs[0] + xs[1])/2. ]
     gap_ys = [ calc_y_intersection_pt(pts[0], pts[1], gap_xs[0]) ]
@@ -60,9 +61,6 @@ def trapz_interval_error(pts, dx):
     return (dx**3)/12.*np.array(second_der)
 
 def plot_error_analysis(xs, ys, es, gap_xs, gap_ys, gap_errors, figure_name=None, title="", show=False, x_label="x", y_label="y"):
-    if not os.environ.has_key("DISPLAY"):
-        import matplotlib
-        matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     fig = plt.figure()
     ax = fig.add_subplot(111)
