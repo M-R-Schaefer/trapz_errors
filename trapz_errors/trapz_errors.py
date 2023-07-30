@@ -40,7 +40,7 @@ To run tests:
 
 import subprocess
 import textwrap
-from typing import Union, Tuple, List
+from typing import List, Tuple, Union
 
 try:
     import click
@@ -64,7 +64,7 @@ def calculate_point_errors(xs: np.ndarray, es: np.ndarray) -> np.ndarray:
 
 def calculate_y_value_uncertainty(points: np.ndarray) -> float:
     point_errors = calculate_point_errors(points[:, 0], points[:, 2])
-    return (point_errors ** 2).sum() ** 0.5
+    return (point_errors**2).sum() ** 0.5
 
 
 def calculate_y_intercept(
@@ -93,7 +93,7 @@ def calculate_trapezoidal_error(
     y = points[:, 1]
     ys = np.array(list(zip(y[:-2], y[1:-1], y[2:]))).T
     product = np.einsum("ij,ij->j", coefficients, ys)
-    error = product * (dx ** 3) / 12
+    error = product * (dx**3) / 12
     return error
 
 
@@ -114,8 +114,7 @@ def calculate_interval_errors(points: np.ndarray) -> Tuple[np.ndarray, float]:
     xs = points[:, 0]
     diff_xs = xs[1:] - xs[:-1]  # dim: N-1, 3
 
-    initial_error = calculate_trapezoidal_error(
-        points[:3], diff_xs[0])  # dim: 1, 3
+    initial_error = calculate_trapezoidal_error(points[:3], diff_xs[0])  # dim: 1, 3
     # dim: 1, 3
     last_error = calculate_trapezoidal_error(points[-3:], diff_xs[-1])
 
@@ -167,8 +166,7 @@ def print_errors(points: np.ndarray, precision: int = 3, conservative: bool = Fa
     integral = calculate_integral(points)
     interval_errors, _ = calculate_interval_errors(points)
     total_truncation_error = np.abs(np.sum(interval_errors))
-    print(
-        f"Estimated total truncation error: {total_truncation_error:.{precision}f}")
+    print(f"Estimated total truncation error: {total_truncation_error:.{precision}f}")
     total_error = calculate_total_error(points, conservative=conservative)
     print(f"Integral: {integral:.{precision}f} ± {total_error:.{precision}f}")
 
@@ -213,8 +211,7 @@ def get_points_to_add_and_extend(
     interval_points = np.concatenate([interval_points.T, [interval_errors]]).T
 
     points_with_error = np.array(points)
-    points_with_error[:, 2] = calculate_point_errors(
-        points[:, 0], points[:, 2])
+    points_with_error[:, 2] = calculate_point_errors(points[:, 0], points[:, 2])
     points_to_assess = np.concatenate([points_with_error, interval_points])
     # largest_absolute_error = np.max(np.abs(interval_points[:, 2]))
     largest_absolute_error = np.abs(interval_points[0])[2]
@@ -278,11 +275,18 @@ def print_reduce(
         print("Target error has been reached.")
 
 
-def plot_error_analysis(points: np.ndarray, height: float = 6, width: float = 8,
-                        xlabel: str = "x", ylabel="y", title="", filename: str = "",
-                        show: bool = False
-                        ):
+def plot_error_analysis(
+    points: np.ndarray,
+    height: float = 6,
+    width: float = 8,
+    xlabel: str = "x",
+    ylabel="y",
+    title="",
+    filename: str = "",
+    show: bool = False,
+):
     from matplotlib import pyplot as plt
+
     _, ax = plt.subplots(figsize=(width, height))
     ax.errorbar(*points.T, marker="o")
     plt.xlabel(xlabel)
@@ -324,7 +328,11 @@ def calculate_error(filename, conservative, precision, verbose):
 @cli.command()
 @click.argument("filename")
 @click.option("--target", default=1.5, help="target error in kJ/mol")
-@click.option("--convergence_rate_scale_factor", default=1, help="scale factor for convergence rate in residual error")
+@click.option(
+    "--convergence_rate_scale_factor",
+    default=1,
+    help="scale factor for convergence rate in residual error",
+)
 @click.option("--conservative", is_flag=True, help="guess error conservatively")
 @click.option("--precision", default=3, help="the precision to print results at")
 @click.option("--verbose", is_flag=True)
@@ -355,7 +363,11 @@ def reduce_error(
 @cli.command()
 @click.argument("filename")
 @click.option("--target", default=1.5, help="target error in kJ/mol")
-@click.option("--convergence_rate_scale_factor", default=1, help="scale factor for convergence rate in residual error")
+@click.option(
+    "--convergence_rate_scale_factor",
+    default=1,
+    help="scale factor for convergence rate in residual error",
+)
 @click.option("--conservative", is_flag=True, help="guess error conservatively")
 @click.option("--precision", default=3, help="the precision to print results at")
 def simple_reduce_error(
@@ -381,7 +393,11 @@ def simple_reduce_error(
 
 @cli.command()
 @click.argument("filename")
-@click.option("--png", default="", help="Filename to save plot to. If not given, plot is not saved")
+@click.option(
+    "--png",
+    default="",
+    help="Filename to save plot to. If not given, plot is not saved",
+)
 @click.option("--height", default=6, help="height of plot in inches")
 @click.option("--width", default=8, help="width of plot in inches")
 @click.option("--xlabel", default="x")
@@ -394,9 +410,16 @@ def plot(filename, png, height, width, xlabel, ylabel, title, show):
     FILENAME is the data file containing lambda, dhdl_average, and error_est.
     """
     points = np.loadtxt(filename)
-    plot_error_analysis(points, height=height, width=width,
-                        xlabel=xlabel, ylabel=ylabel, title=title,
-                        filename=png, show=show)
+    plot_error_analysis(
+        points,
+        height=height,
+        width=width,
+        xlabel=xlabel,
+        ylabel=ylabel,
+        title=title,
+        filename=png,
+        show=show,
+    )
 
 
 def test_simple_calculate_error(filename):
@@ -414,37 +437,58 @@ def test_conservative_verbose_calculate_error(filename):
         capture_output=True,
         text=True,
     )
-    expected = textwrap.dedent("""\
+    expected = textwrap.dedent(
+        """\
     Error from y-value uncertainty: ± 0.564
     Estimated total truncation error: 0.310
     Integral: 21.330 ± 1.539
-    """)
+    """
+    )
     assert proc.stdout == expected, proc.stdout
 
 
 def test_conservative_verbose_calculate_error_precision(filename):
     proc = subprocess.run(
-        [__file__, "calculate-error", filename,
-            "--conservative", "--verbose", "--precision", "2"],
+        [
+            __file__,
+            "calculate-error",
+            filename,
+            "--conservative",
+            "--verbose",
+            "--precision",
+            "2",
+        ],
         capture_output=True,
         text=True,
     )
-    expected = textwrap.dedent("""\
+    expected = textwrap.dedent(
+        """\
     Error from y-value uncertainty: ± 0.56
     Estimated total truncation error: 0.31
     Integral: 21.33 ± 1.54
-    """)
+    """
+    )
     assert proc.stdout == expected, proc.stdout
 
 
 def test_reduce_error_conservative_verbose(filename):
     proc = subprocess.run(
-        [__file__, "reduce-error", filename,
-            "--conservative", "--verbose", "--target", "1", "--convergence_rate_scale_factor", "1"],
+        [
+            __file__,
+            "reduce-error",
+            filename,
+            "--conservative",
+            "--verbose",
+            "--target",
+            "1",
+            "--convergence_rate_scale_factor",
+            "1",
+        ],
         capture_output=True,
         text=True,
     )
-    expected = textwrap.dedent("""\
+    expected = textwrap.dedent(
+        """\
     Error from y-value uncertainty: ± 0.564
     Estimated total truncation error: 0.310
     Integral: 21.330 ± 1.539
@@ -453,7 +497,8 @@ def test_reduce_error_conservative_verbose(filename):
     0.812
     Suggested to reduce uncertainty in existing points:
     0.850
-    """)
+    """
+    )
     assert proc.stdout == expected, proc.stdout
 
 
@@ -466,12 +511,15 @@ def run_tests():
     try:
         import tqdm
     except ImportError:
+
         class tqdm:
             def tqdm(self, iterable):
                 return iterable
+
         tqdm = tqdm()
 
-    EXAMPLE_DATA = textwrap.dedent("""\
+    EXAMPLE_DATA = textwrap.dedent(
+        """\
     # lambda  dvdl_average  error_est
     0.000 99.84849 0.36028
     0.025 155.28053 0.90581
@@ -495,7 +543,8 @@ def run_tests():
     0.900 -71.38330 0.95010
     0.950 -30.13460 0.54041
     1.000 3.15286 0.21252
-    """)
+    """
+    )
 
     with tempfile.TemporaryDirectory() as tmp:
         datafile = os.path.join(tmp, "data.dat")
@@ -507,7 +556,7 @@ def run_tests():
             test_simple_calculate_error,
             test_conservative_verbose_calculate_error,
             test_conservative_verbose_calculate_error_precision,
-            test_reduce_error_conservative_verbose
+            test_reduce_error_conservative_verbose,
         ]
         for func in tqdm.tqdm(functions):
             func(datafile)

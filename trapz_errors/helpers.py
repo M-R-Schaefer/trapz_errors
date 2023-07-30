@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def round_sigfigs(num, sig_figs):
     """Round to specified number of sigfigs.
 
@@ -25,37 +26,53 @@ def round_sigfigs(num, sig_figs):
     else:
         return 0  # Can't take the log of 0
 
+
 def rss(values):
     return np.sqrt(np.sum(np.square(values)))
 
+
 def calc_y_intersection_pt(pt1, pt2, x_c):
-    '''
+    """
     Return the point at the intersection of the linear function defined by pt1,pt2 and the line x = x_c
-    '''
+    """
     x1, y1, _ = pt1
     x2, y2, _ = pt2
     # gradient of line 1
-    m = (y2 - y1)/float(x2 - x1)
+    m = (y2 - y1) / float(x2 - x1)
     # y-intercept of line1
-    c = (x1*y2 - x2*y1)/float(x1 - x2)
+    c = (x1 * y2 - x2 * y1) / float(x1 - x2)
     # intersection with x_c
-    yi = m*x_c + c
+    yi = m * x_c + c
     return yi
+
 
 def second_derivative_with_uncertainty(pts):
     (x1, y1, e1), (x2, y2, e2), (x3, y3, e3) = pts
-    h0 = x2-x1
-    h1 = x3-x2
-    a = 2./(h0*(h0+h1))
-    b = -2./(h0*h1)
-    c = 2./(h1*(h0+h1))
-    return a*y1 + b*y2 + c*y3, rss([a*e1, b*e2, c*e3])
+    h0 = x2 - x1
+    h1 = x3 - x2
+    a = 2.0 / (h0 * (h0 + h1))
+    b = -2.0 / (h0 * h1)
+    c = 2.0 / (h1 * (h0 + h1))
+    return a * y1 + b * y2 + c * y3, rss([a * e1, b * e2, c * e3])
+
 
 def parse_user_data(data):
     # first attempt to get xs, ys and errors
     try:
-        xs, ys, es = zip(*[map(float, l.split()[:3]) for l in data.splitlines() if l and not l.startswith("#")])
+        xs, ys, es = zip(
+            *[
+                map(float, l.split()[:3])
+                for l in data.splitlines()
+                if l and not l.startswith("#")
+            ]
+        )
     except:
         # now try just xs and ys with errors set to 0.0
-        xs, ys, es = zip(*[map(l.split()[:2]) + [0.0] for l in data.splitlines() if l and not l.startswith("#")])
+        xs, ys, es = zip(
+            *[
+                map(l.split()[:2]) + [0.0]
+                for l in data.splitlines()
+                if l and not l.startswith("#")
+            ]
+        )
     return xs, ys, es
