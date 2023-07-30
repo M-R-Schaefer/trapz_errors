@@ -1,12 +1,11 @@
 import numpy as np
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from trapz_errors.integration_errors.config import CONVERGENCE_RATE_SCALING
-from trapz_errors.integration_errors.calculate_error import config_argparse, process_plot_argument, parse_user_data, \
+from trapz_errors.config import CONVERGENCE_RATE_SCALING
+from trapz_errors.calculate_error import config_argparse, process_plot_argument, parse_user_data, \
     plot_error_analysis, trapz_integrate_with_uncertainty
-from trapz_errors.integration_errors.helpers import round_sigfigs, rss
+from trapz_errors.helpers import round_sigfigs, rss
 
 def reduce_error_on_residual_error(error_pts, residule_error, convergence_rate_scaling, be_conservative):
     sorted_error_pts = sorted(error_pts, key=lambda x:abs(x[0]), reverse=True)
@@ -104,5 +103,3 @@ def main():
     xs, ys, es = np.array(data)
     run(xs, ys, es, target_error, convergence_rate_scaling, be_conservative, figure_name, sigfigs, verbose)
 
-if __name__=="__main__":
-    main()

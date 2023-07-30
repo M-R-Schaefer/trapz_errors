@@ -2,10 +2,9 @@ import argparse
 import numpy as np
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from trapz_errors.integration_errors.helpers import round_sigfigs, rss, calc_y_intersection_pt, second_derivative_with_uncertainty, parse_user_data
-from trapz_errors.integration_errors.config import DEFAULT_FIGURE_NAME
+from trapz_errors.helpers import round_sigfigs, rss, calc_y_intersection_pt, second_derivative_with_uncertainty, parse_user_data
+from trapz_errors.config import DEFAULT_FIGURE_NAME
 
 DO_NOT_PLOT = "DO_NOT_PLOT"
 
@@ -146,6 +145,3 @@ def main():
 
     xs, ys, es = np.array(data)
     run(xs, ys, es, figure_name, sigfigs, verbose, be_conservative)
-
-if __name__=="__main__":
-    main()
