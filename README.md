@@ -1,3 +1,10 @@
+This is a fork of the `trapz_errors` package created by Martin Stroet with the goal to update it to Python 3.X.
+My main interest is not in using the package itself, but as a dependency of the `umbrella_integration` package.
+As such, I do not intend to add features to it, just to make it usable in a modern python environment.
+
+This fork is not an official Kästner group endeavor.
+
+
 -----------------------------------
 Error Analysis for Trapezoidal Rule Applied to Uncertain Data
 -----------------------------------
@@ -7,15 +14,18 @@ A tool to analyse errors associated with applying the Trapezoidal rule to uncert
 Author: Martin Stroet (University of Queensland)
 
 ---------------------
-Requirements
+Installation
 ----------------------
 
-    Python 2.7
-    numpy
+Now you can install `trapz_errors` by running one of the commands below
 
-Optional
+```bash
+pip install git+https://github.com/M-R-Schaefer/trapz_errors
 
-    matplotlib (show plots)
+# to add it as a dependency to your project
+poetry add git+https://github.com/M-R-Schaefer/trapz_errors
+```
+
 
 -------------------------------------------------------------------------------
 Usage: Calculate integration error considering y-value uncertainty and truncation error.
