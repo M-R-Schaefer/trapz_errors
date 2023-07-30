@@ -1,8 +1,9 @@
 #!/bin/bash
 
 echo "Calculate total error"
-python ../calculate_error.py -d ../test/eg_data.dat -c -p example.png
+trapz-errors calculate-error ../test/eg_data.dat --conservative
+trapz-errors plot ../test/eg_data.dat --png example.png
 
 echo
 echo "Find largest error source"
-python ../reduce_error.py -d ../test/eg_data.dat -t 1.0 -c
+trapz-errors reduce-error ../test/eg_data.dat --target 1.0 --conservative

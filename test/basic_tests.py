@@ -12,9 +12,9 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from integration_errors.reduce_error import reduce_error_on_residual_error, run as run_reduce_error
-from integration_errors.calculate_error import trapz_integrate_with_uncertainty, point_error_calc
-from integration_errors.helpers import rss, parse_user_data
+from trapz_errors.reduce_error import reduce_error_on_residual_error, run as run_reduce_error
+from trapz_errors.calculate_error import trapz_integrate_with_uncertainty, point_error_calc
+from trapz_errors.helpers import rss, parse_user_data
 
 def integrate_with_point_uncertinaty(xs, ys, es):
     integration_error_per_point = point_error_calc(xs, es)
