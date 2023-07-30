@@ -17,7 +17,7 @@ Author: Martin Stroet (University of Queensland)
 Installation
 ----------------------
 
-Now you can install `trapz_errors` by running one of the commands below
+You can install `trapz_errors` by running one of the commands below
 
 ```bash
 pip install git+https://github.com/M-R-Schaefer/trapz_errors
